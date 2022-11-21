@@ -5,12 +5,14 @@ using System.Linq;
 using System;
 using UnityEngine.UI;
 using DG.Tweening;
+using Photon.Pun;
 
 public class CardCreateManager : MonoBehaviour
 {
 
     // 生成するCardオブジェクト
     public Card CardPrefab;
+
 
     // 「カード」を生成する親オブジェクト
     public RectTransform CardCreateParent;
@@ -35,7 +37,7 @@ public class CardCreateManager : MonoBehaviour
     private int mWidthIdx;
 
     // カードの生成アニメーションのアニメーション時間
-    private readonly float DEAL_CAED_TIME = 1f;
+    private readonly float DEAL_CAED_TIME = 0.5f;
 
     /*void Start()
     {
@@ -106,6 +108,12 @@ public class CardCreateManager : MonoBehaviour
         imgList.Add(Resources.Load<Sprite>("Image/card_image_003"));
         imgList.Add(Resources.Load<Sprite>("Image/card_image_004"));
         imgList.Add(Resources.Load<Sprite>("Image/card_image_005"));
+        /* imgList.Add(Resources.Load<Sprite>("Image/card_image_006"));
+         imgList.Add(Resources.Load<Sprite>("Image/card_image_007"));
+         imgList.Add(Resources.Load<Sprite>("Image/card_image_008"));
+         imgList.Add(Resources.Load<Sprite>("Image/card_image_009"));
+         imgList.Add(Resources.Load<Sprite>("Image/card_image_0010"));
+         imgList.Add(Resources.Load<Sprite>("Image/card_image_0011"));*/
         // forを回す回数を取得する
         int loopCnt = imgList.Count;
 
@@ -161,12 +169,18 @@ public class CardCreateManager : MonoBehaviour
         var _cardData = this.mRandomCardDataList[this.mIndex];
 
         // Instantiate で Cardオブジェクトを生成
+        //Card card = Instantiate<Card>(this.CardPrefab, this.CardCreateParent);
         Card card = Instantiate<Card>(this.CardPrefab, this.CardCreateParent);
+
+        /*sphereObject = GameObject.Find("Sphere");
+    sphereScript = sphereObject.GetComponent<SphereScript>();*/
         // データを設定する
         card.Set(_cardData);
         // カードの初期値を設定 (画面外にする)
+        //card.mRt.anchoredPosition = new Vector2(1900, 0f);
         card.mRt.anchoredPosition = new Vector2(1900, 0f);
         // サイズをGridLayoutのCellSizeに設定
+        //card.mRt.sizeDelta = this.GridLayout.cellSize;
         card.mRt.sizeDelta = this.GridLayout.cellSize;
 
         // カードの移動先を設定

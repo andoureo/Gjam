@@ -2,8 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using UnityEngine.UI;
 
-public class GameSceneManager : MonoBehaviour
+
+public class GameSceneManager : MonoBehaviourPunCallbacks
 {
 
     // 一致したカードリストID
@@ -23,6 +26,12 @@ public class GameSceneManager : MonoBehaviour
     // 経過時間
     private float mElapsedTime;
 
+    int HostScore = 0;
+
+    int GuestScore = 0;
+
+    public GameObject panel;
+
     // ゲームステート管理
     private EGameState mEGameState;
     void Start()
@@ -38,7 +47,7 @@ public class GameSceneManager : MonoBehaviour
          this.mElapsedTime = 0f;*/
 
         // ゲームステートを初期化
-
+        panel.SetActive(false);
         // ゲームステートを初期化
         this.mEGameState = EGameState.START;
 
@@ -47,6 +56,8 @@ public class GameSceneManager : MonoBehaviour
 
         // ゲームのステート管理
         this.mSetGameState();
+
+
     }
     /// <summary>
     /// ゲームステートで処理を変更する
@@ -90,11 +101,13 @@ public class GameSceneManager : MonoBehaviour
     /// </summary>
     public void OnGameStart()
     {
+        // StartCoroutine(Example());
         // ゲームステートを初期化
         this.mEGameState = EGameState.READY;
 
         // ゲームのステート管理
         this.mSetGameState();
+        panel.SetActive(true);
     }
     /// <summary>
     /// リザルトステートの設定処理
@@ -126,6 +139,7 @@ public class GameSceneManager : MonoBehaviour
     /// </summary>
     private void mSetGameReady()
     {
+
         // カード配布アニメーションが終了した後のコールバック処理を実装する
         this.CardCreate.OnCardAnimeComp = null;
         this.CardCreate.OnCardAnimeComp = () =>
@@ -135,7 +149,6 @@ public class GameSceneManager : MonoBehaviour
             this.mEGameState = EGameState.GAME;
             this.mSetGameState();
         };
-
         // 一致したカードIDリストを初期化
         this.mContainCardIdList.Clear();
 
@@ -146,8 +159,19 @@ public class GameSceneManager : MonoBehaviour
         this.mElapsedTime = 0f;
 
     }
+    /*IEnumerator Example()
+    {
+        Debug.Log("wait");
+        yield return new WaitUntil(() => PhotonNetwork.CurrentRoom.PlayerCount >= 2);
+        Debug.Log("FULL");
+    }*/
+
     void Update()
     {
+        if (PhotonNetwork.CurrentRoom.PlayerCount >= 1)
+        {
+            panel.SetActive(false);
+        }
 
         // GameState が GAME状態なら
         if (this.mEGameState == EGameState.GAME)
@@ -167,6 +191,17 @@ public class GameSceneManager : MonoBehaviour
                 if (selectedId == GameStateController.Instance.SelectedCardIdList[1])
                 {
 
+                    if (PhotonNetwork.IsMasterClient)
+                    {
+                        HostScore++;
+                        Debug.Log(HostScore);
+                    }
+                    else if (!PhotonNetwork.IsMasterClient)
+                    {
+                        GuestScore++;
+                        Debug.Log(GuestScore);
+                        photonView.RPC(nameof(Score), RpcTarget.All, GuestScore);
+                    }
                     Debug.Log($"Contains! {selectedId}");
                     // 一致したカードIDを保存する
                     this.mContainCardIdList.Add(selectedId);
@@ -181,12 +216,18 @@ public class GameSceneManager : MonoBehaviour
             // 配置した全種類のカードを獲得したら
             if (this.mContainCardIdList.Count >= 6)
             {
-
+                mSetGameReady();
                 // ゲームをリザルトステートに遷移する
-                this.mEGameState = EGameState.RESULT;
-                this.mSetGameState();
+                //this.mEGameState = EGameState.RESULT;
+                //this.mSetGameState();
             }
 
         }
     }
+    [PunRPC]
+    private void Score(int score)
+    {
+        GuestScore = score;
+    }
+
 }

@@ -4,8 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class Card : MonoBehaviour
+public class Card : MonoBehaviourPunCallbacks
 {
 
     // カードのID
@@ -21,7 +23,7 @@ public class Card : MonoBehaviour
     private bool mIsSelected = false;
     public bool IsSelected => this.mIsSelected;
     // カード情報
-    private CardData mData;
+    public CardData mData;
     // 座標情報
     public RectTransform mRt;
 
@@ -48,6 +50,7 @@ public class Card : MonoBehaviour
 
         // 座標情報を取得しておく
         this.mRt = this.GetComponent<RectTransform>();
+
     }
     /// <summary>
     /// 選択された時の処理
