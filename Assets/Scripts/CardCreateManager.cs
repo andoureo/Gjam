@@ -37,7 +37,7 @@ public class CardCreateManager : MonoBehaviour
     private int mWidthIdx;
 
     // カードの生成アニメーションのアニメーション時間
-    private readonly float DEAL_CAED_TIME = 0.5f;
+    private readonly float DEAL_CAED_TIME = 0.2f;
 
     /*void Start()
     {
@@ -97,32 +97,67 @@ public class CardCreateManager : MonoBehaviour
         //Card card = Instantiate<Card>(this.CardPrefab, this.CardCreateParent);
         // カード情報リスト
         List<CardData> cardDataList = new List<CardData>();
-
+        List<CardData> cardDataList2 = new List<CardData>();
         // 表示するカード画像情報のリスト
         List<Sprite> imgList = new List<Sprite>();
-
+        List<Sprite> imgList2 = new List<Sprite>();
         // Resources/Imageフォルダ内にある画像を取得する
-        imgList.Add(Resources.Load<Sprite>("Image/card_image_000"));
+        /*imgList.Add(Resources.Load<Sprite>("Image/card_image_000"));
         imgList.Add(Resources.Load<Sprite>("Image/card_image_001"));
         imgList.Add(Resources.Load<Sprite>("Image/card_image_002"));
         imgList.Add(Resources.Load<Sprite>("Image/card_image_003"));
         imgList.Add(Resources.Load<Sprite>("Image/card_image_004"));
         imgList.Add(Resources.Load<Sprite>("Image/card_image_005"));
-        /* imgList.Add(Resources.Load<Sprite>("Image/card_image_006"));
-         imgList.Add(Resources.Load<Sprite>("Image/card_image_007"));
-         imgList.Add(Resources.Load<Sprite>("Image/card_image_008"));
-         imgList.Add(Resources.Load<Sprite>("Image/card_image_009"));
-         imgList.Add(Resources.Load<Sprite>("Image/card_image_0010"));
-         imgList.Add(Resources.Load<Sprite>("Image/card_image_0011"));*/
+        imgList.Add(Resources.Load<Sprite>("Image/card_image_006"));
+        imgList.Add(Resources.Load<Sprite>("Image/card_image_007"));
+        imgList.Add(Resources.Load<Sprite>("Image/card_image_008"));
+        /* imgList.Add(Resources.Load<Sprite>("Image/card_image_009"));
+         imgList.Add(Resources.Load<Sprite>("Image/card_image_010"));
+         imgList.Add(Resources.Load<Sprite>("Image/card_image_011"));*/
         // forを回す回数を取得する
-        int loopCnt = imgList.Count;
+        //int loopCnt = imgList.Count;
 
-        for (int i = 0; i < loopCnt; i++)
+        /*for (int i = 0; i < loopCnt; i++)
         {
 
             // カード情報を生成する
             CardData cardata = new CardData(i, imgList[i]);
             cardDataList.Add(cardata);
+        }*/
+        imgList.Add(Resources.Load<Sprite>("Image/Chinese/002"));
+        imgList.Add(Resources.Load<Sprite>("Image/Chinese/003"));
+        imgList.Add(Resources.Load<Sprite>("Image/Chinese/004"));
+        imgList.Add(Resources.Load<Sprite>("Image/Chinese/006"));
+        imgList.Add(Resources.Load<Sprite>("Image/Chinese/009"));
+        imgList.Add(Resources.Load<Sprite>("Image/Chinese/012"));
+        imgList.Add(Resources.Load<Sprite>("Image/Chinese/015"));
+        imgList.Add(Resources.Load<Sprite>("Image/Chinese/016"));
+        imgList.Add(Resources.Load<Sprite>("Image/Chinese/020"));
+        int loopCnt = imgList.Count;
+        for (int i = 0; i < loopCnt; i++)
+        {
+            // カード情報を生成する
+            CardData cardata = new CardData(i, imgList[i]);
+            cardDataList.Add(cardata);
+        }
+        //imgList2.Add(Resources.Load<Sprite>());
+        imgList2.Add(Resources.Load<Sprite>("Image/English/2.SITE"));
+        imgList2.Add(Resources.Load<Sprite>("Image/English/3.LACK"));
+        imgList2.Add(Resources.Load<Sprite>("Image/English/4.CLIENT"));
+        imgList2.Add(Resources.Load<Sprite>("Image/English/6.TRAFIC"));
+        imgList2.Add(Resources.Load<Sprite>("Image/English/9.FUEL"));
+        imgList2.Add(Resources.Load<Sprite>("Image/English/12.DELAY"));
+        imgList2.Add(Resources.Load<Sprite>("Image/English/15.BLANK"));
+        imgList2.Add(Resources.Load<Sprite>("Image/English/16.DUE"));
+        imgList2.Add(Resources.Load<Sprite>("Image/English/20.THUS"));
+
+        int loopCnt2 = imgList2.Count;
+        for (int i = 0; i < loopCnt2; i++)
+        {
+
+            // カード情報を生成する
+            CardData cardata = new CardData(i, imgList2[i]);
+            cardDataList2.Add(cardata);
         }
 
         this.mIndex = 0;
@@ -131,20 +166,25 @@ public class CardCreateManager : MonoBehaviour
         // 生成したカードリスト２つ分のリストを生成する
         List<CardData> SumCardDataList = new List<CardData>();
         SumCardDataList.AddRange(cardDataList);
-        //SumCardDataList.AddRange(cardDataList);
+        //Debug.Log("SumCardDataList:" + SumCardDataList.Count);
+        SumCardDataList.AddRange(cardDataList2);
 
         // ランダムリストの初期化
         this.mRandomCardDataList.Clear();
 
         // リストの中身をランダムに再配置する
         this.mRandomCardDataList = SumCardDataList.OrderBy(a => Guid.NewGuid()).ToList();
-        this.mRandomCardDataList.AddRange(SumCardDataList.OrderBy(a => Guid.NewGuid()).ToList());
+        //this.mRandomCardDataList.AddRange(SumCardDataList.OrderBy(a => Guid.NewGuid()).ToList());
 
+        Debug.Log("mRandomCardDataList:" + mRandomCardDataList.Count);
         // GridLayoutを無効
         this.GridLayout.enabled = false;
 
         // カードを配るアニメーション処理
         this.mSetDealCardAnime();
+
+
+
 
         // カードオブジェクトを生成する
         /*foreach (var _cardData in mRandomCardDataList)
@@ -188,7 +228,7 @@ public class CardCreateManager : MonoBehaviour
         float posY = ((this.GridLayout.cellSize.y * this.mHelgthIdx) + (this.GridLayout.spacing.y * this.mHelgthIdx)) * -1f;
 
         // DOAnchorPosでアニメーションを行う
-        card.mRt.DOAnchorPos(new Vector2(posX, posY), this.DEAL_CAED_TIME)
+        card.mRt.DOAnchorPos(new Vector2(posX + 70, posY + 260), this.DEAL_CAED_TIME)
             // アニメーションが終了したら
             .OnComplete(() =>
             {

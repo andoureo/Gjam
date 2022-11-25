@@ -13,8 +13,11 @@ public class _MatchmakingView : MonoBehaviourPunCallbacks
 
     private CanvasGroup canvasGroup;
 
+
+
     private void Start()
     {
+        PhotonNetwork.ConnectUsingSettings();
         canvasGroup = GetComponent<CanvasGroup>();
         // マスターサーバーに接続するまでは、入力できないようにする
         canvasGroup.interactable = false;
@@ -54,6 +57,8 @@ public class _MatchmakingView : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+
+
         // ルームへの参加が成功したら、UIを非表示にする
         gameObject.SetActive(false);
     }

@@ -40,7 +40,7 @@ public class Card : MonoBehaviourPunCallbacks
 
         // 表示する画像を設定する
         // 初回は全て裏面表示とする
-        this.CardImage.sprite = Resources.Load<Sprite>("Image/card_back");
+        this.CardImage.sprite = Resources.Load<Sprite>("Image/newIMG_0643");
 
         // 選択判定フラグを初期化する
         this.mIsSelected = false;
@@ -138,7 +138,7 @@ public class Card : MonoBehaviourPunCallbacks
             this.mIsSelected = false;
 
             // カードを背面表示にする
-            this.CardImage.sprite = Resources.Load<Sprite>("Image/card_back");
+            this.CardImage.sprite = Resources.Load<Sprite>("Image/newIMG_0643");
 
             // 角度を元にもどす
             this.onReturnRotate(() =>
